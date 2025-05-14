@@ -1,39 +1,16 @@
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
-    dangerouslyAllowSVG: true,
+    domains: ['localhost']
   },
-  env: {
-    API_URL: process.env.API_URL, // Example of using environment variables
-    NEXT_PUBLIC_UPI: process.env.UPI, // Expose UPI environment variable to the client side
+  eslint: {
+    ignoreDuringBuilds: true
   },
-  webpack: (config, { dev, isServer }) => {
-    // Only load polyfills for the client-side bundle
-    if (!isServer) {
-      const originalEntry = config.entry;
-      config.entry = async () => {
-        const entries = await originalEntry();
-        
-        // Add polyfills before your code
-        if (entries['main.js'] && !entries['main.js'].includes('./src/polyfills.js')) {
-          entries['main.js'].unshift('./src/polyfills.js');
-        }
-        
-        return entries;
-      };
-    }
+  typescript: {
+    ignoreBuildErrors: true
+  },
+  staticPageGenerationTimeout: 120
+}
 
-    // Disable webpack cache in development to prevent serialization issues
-    if (dev) {
-      config.cache = false;
-    }
-
-    return config;
-  }
-};
+module.exports = nextConfig

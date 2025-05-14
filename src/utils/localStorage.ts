@@ -1,7 +1,7 @@
 import { Donation, Animal, User } from '../types';
 
 // Storage keys
-const STORAGE_KEYS = {
+export const STORAGE_KEYS = {
   DONATIONS: 'animal_welfare_donations',
   ANIMALS: 'animal_welfare_animals',
   USERS: 'animal_welfare_users',
