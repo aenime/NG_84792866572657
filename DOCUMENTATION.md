@@ -1,875 +1,535 @@
-# 🐾 Animal Welfare NGO Website - Complete Documentation
+# Animal Welfare NGO Website - Project Documentation
 
-## Table of Contents
+## 1. Introduction
 
-1. [Introduction](#introduction)
-2. [Technology Stack](#technology-stack)
-3. [Core Goals](#core-goals)
-4. [Project Structure](#project-structure)
-5. [User-Facing Features](#user-facing-features)
-6. [Admin Panel Features](#admin-panel-features)
-7. [Technical Architecture](#technical-architecture)
-8. [Media Management System](#media-management-system)
-9. [Donation System](#donation-system)
-10. [Database Schema](#database-schema)
-11. [API Reference](#api-reference)
-12. [Development Guide](#development-guide)
-13. [Deployment](#deployment)
-14. [Performance & Security](#performance--security)
-15. [Media Integration Guide](#media-integration-guide)
-16. [Future Roadmap](#future-roadmap)
+This document outlines the features and structure for a website designed for an Animal Welfare Non-Governmental Organization (NGO). The platform will facilitate donations, showcase the NGO's work through posts and media, and provide a comprehensive admin panel for managing content and operations.
 
----
+## 2. Core Features
 
-## Introduction
+- **Public-facing Site**: Information about the NGO, its mission, and how to help
+- **Donation System**: Secure online donations via credit card, PayPal, etc.
+- **Content Management**: Admin panel to manage posts, media, and donations
+- **User Authentication**: Secure login for admin and potentially donors
+- **Dynamic Theming**: Customizable appearance based on NGO branding
 
-This document provides comprehensive documentation for the Animal Welfare NGO website. The website is designed to help animal welfare organizations manage their online presence, media, donations, and administrative tasks with a mobile-first approach.
+## 3. Dynamic Content and Theming
 
----
+The website will feature dynamic content such as blog posts, media galleries, and donation records. Theming will be dynamic, allowing the NGO to customize the site's appearance.
 
-## Technology Stack
+## 4. Technical Implementation with Next.js
 
-- **Frontend Framework**: Next.js
-- **Database**: MongoDB
-- **Styling**: Tailwind CSS
-- **Deployment**: Render
-- **Content Management**: Custom admin panel
-- **Responsive Design**: Mobile-first (max 500px width) above 500px width user showing under Maintenance
-
----
-
-## Core Goals
-
-- Mobile-first design (fixed 500px on wide screens)
-- Simple, trustable donation flow (via UPI)
-- Easy media management (especially for animal images)
-- Smart admin control + optional AI assistance
-- Clear calls-to-action: Adopt, Donate, Connect
-
----
-
-## Project Structure
-
-### Directory Structure
+### 4.1. Project Structure
 
 ```
 animal-welfare-ngo/
-├── .next/                  # Next.js build output
-├── backup/                 # Backup of old/replaced files
-├── docs/                   # Documentation files
-├── public/                 # Static assets
-│   ├── favicon/            # Favicon files in different sizes
-│   └── images/             # Images used throughout the site
-├── scripts/                # Utility scripts
-├── src/                    # Source code
-│   ├── app/                # Next.js App Router pages
-│   ├── components/         # React components
-│   ├── context/            # React context providers
-│   ├── services/           # Service layer for API calls
-│   ├── styles/             # Global styles
-│   ├── types/              # TypeScript type definitions
-│   └── utils/              # Utility functions
-├── .env.local              # Environment variables (not committed)
-├── .eslintrc.json          # ESLint configuration
-├── README.md               # Project documentation
-├── cleanup.sh              # Cleanup script for removing unnecessary files
-├── middleware.ts           # Next.js middleware
-├── next.config.js          # Next.js configuration
-├── package.json            # NPM dependencies and scripts
-├── postcss.config.js       # PostCSS configuration
-├── tailwind.config.js      # Tailwind CSS configuration
-└── tsconfig.json           # TypeScript configuration
+├── public/
+│   ├── favicon.ico
+│   ├── images/
+│   └── uploads/  (optional local storage for development)
+├── src/
+│   ├── app/
+│   │   ├── page.js                 # Home page
+│   │   ├── donate/
+│   │   │   └── page.js             # Donation page
+│   │   ├── posts/
+│   │   │   ├── page.js             # All posts
+│   │   │   └── [slug]/page.js      # Single post
+│   │   ├── about/
+│   │   │   └── page.js             # About Us page
+│   │   ├── privacy-policy/
+│   │   │   └── page.js             # Privacy Policy page
+│   │   ├── terms-conditions/
+│   │   │   └── page.js             # Terms & Conditions page
+│   │   ├── admin/
+│   │   │   ├── page.js             # Admin dashboard
+│   │   │   ├── donors/page.js      # Donor management
+│   │   │   ├── media/page.js       # Media management
+│   │   │   ├── posts/page.js       # Posts management
+│   │   │   ├── services/page.js    # Services management
+│   │   │   ├── payment-settings/
+│   │   │   │   └── page.js         # Payment settings (UPI, etc.)
+│   │   │   └── profile/page.js     # NGO profile management
+│   │   └── layout.js               # Root layout
+│   ├── components/
+│   │   ├── common/                 # Shared components
+│   │   │   ├── Navigation.jsx      # Main navigation menu
+│   │   │   ├── Footer.jsx          # Footer component
+│   │   │   └── PostCard.jsx        # Standardized post design component
+│   │   ├── admin/                  # Admin panel components
+│   │   ├── donation/               # Donation components
+│   │   └── home/                   # Home page components
+│   ├── lib/
+│   │   ├── db.js                   # Database connection
+│   │   └── utils.js                # Utility functions
+│   ├── hooks/
+│   │   └── useNGOData.js           # Custom hook for NGO data
+│   └── styles/
+│       └── globals.css             # Global styles
+├── prisma/                         # Database schema (if using Prisma)
+│   └── schema.prisma
+├── middleware.js                   # Next.js middleware for admin protection
+├── .env                            # Environment variables
+├── .env.local                      # Local environment variables
+├── next.config.js                  # Next.js configuration
+└── package.json                    # Project dependencies
 ```
 
-### Key Directories
+### 4.2. Key Next.js Features Implementation
 
-#### `/src/app`
+#### 4.2.1. Frontend (App Router)
+- **App Router**: Using Next.js 13+ App Router for routing and layouts
+- **Server Components**: Leverage React Server Components for improved performance
+- **Client Components**: Use client components for interactive elements
+- **Static Site Generation (SSG)**: For public pages like home, services listings
+- **Incremental Static Regeneration (ISR)**: For posts that update periodically  
+- **Server Actions**: For form submissions and data mutations
 
-Contains the main application pages using Next.js App Router pattern:
+#### 4.2.2. Backend Features
+- **API Routes**: Build serverless API endpoints in `app/api/` for:
+  - Donation record management (status tracking only, not processing)
+  - Media upload/management
+  - Post CRUD operations
+  - Service management
+  - NGO profile management
+  - Authentication
 
-- `layout.tsx` - Root layout with common elements (Header, Footer)
-- `page.tsx` - Home page
-- `/admin/...` - Admin panel routes
-- `/api/...` - API routes
+#### 4.2.3. Database and Storage
+- **Database**: MongoDB for flexible document-based storage
+  - Use Mongoose ODM for schema validation and data modeling
+  - Implement MongoDB Atlas for cloud-hosted solution
+- **Media Storage**: 
+  - Development: Local file system with Next.js public directory
+  - Production: Cloud storage like AWS S3, Cloudinary, or Vercel Blob Storage
+  
+#### 4.2.4. Authentication
+- **NextAuth.js**: For secure admin authentication
+- **Middleware**: Protect admin routes from unauthorized access
 
-#### `/src/components`
+#### 4.2.5. Forms and Validation
+- **React Hook Form**: For form handling
+- **Zod**: For schema validation
 
-Reusable React components organized by feature:
+### 4.3. Key Implementation Details
 
-- `/admin/` - Admin panel components
-  - Media management components
-  - Dashboard components
-  - Settings components
-- `/common/` - Shared components used across the app
-  - `Header.tsx` - Site header with navigation
-  - `Footer.tsx` - Site footer
-  - `ClientScreenCheck.tsx` - Component to handle mobile-only display
-  - Other shared UI components
-- `/donation/` - Donation-related components
-- `/home/` - Components specific to the home page
-  - `Hero.tsx` - Hero section
-  - `AnimalCards.tsx` - Featured animals display
-  - `SuccessStories.tsx` - Success stories grid
-  - `InjuredAnimals.tsx` - Display for injured animals needing help
-  - `RecentBlogPosts.tsx` - Blog post previews
+#### Services Display
+- Services created in the admin panel will automatically display in the main navigation menu
+- Each service will have its own dedicated page with relevant content and media
+- Services will be stored in the database and dynamically fetched for display
 
-#### `/src/context`
+#### Standardized Post Design
+- A reusable `PostCard` component will be created that maintains consistent design across the site
+- The component will display:
+  - Featured image
+  - Title
+  - Brief excerpt
+  - Publication date
+  - Category/service tag
+- The same component will be used on the home page, post listing pages, and related posts sections
 
-React context providers:
+#### Payment Integration
+- **UPI Payment Flow**:
+  - No backend payment processing - direct redirection to mobile payment apps
+  - **Separate UPI Configuration for Each Payment App**:
+    - Admin panel will have dedicated sections for each payment app (Google Pay, PhonePe, Paytm)
+    - Each app configuration includes:
+      - UPI ID specific to that app
+      - Custom display name for that app
+      - QR code upload specifically for that app
+      - Toggle to enable/disable individual payment apps
+  - **Payment Selection UI**:
+    - Donation page will display separate buttons/cards for each enabled payment app
+    - Each payment option will be visually distinct with the app's logo and branding
+    - When user selects a specific app (e.g., Google Pay):
+      - They see only the UPI details and QR code for Google Pay
+      - Deep link is configured specifically for the selected app
+  - When user initiates donation:
+    1. User first enters donation amount and personal details
+    2. User then selects their preferred payment app from the options
+    3. System displays the QR code and UPI ID specific to the selected app
+    4. User is redirected to the selected mobile app with pre-filled UPI details
+    5. Transaction is recorded as "pending" in the system
+    6. Admin manually verifies payments received to their UPI accounts
+    7. Admin sends manual confirmation message to users
+    8. Admin updates transaction status in the admin panel
+  - System will maintain a log of all pending and confirmed donations
+  - Donation summary dashboard will show pending vs. confirmed transactions
 
-- `MediaContext.tsx` - Context for media management
+#### Manual Payment Verification Process
+- Admin dashboard will prominently display pending donations that need verification
+- Each pending donation will include:
+  - Transaction date and time
+  - Donor details (name, contact information)
+  - Amount
+  - Reference ID (if provided by donor)
+- Admin will have options to:
+  - Mark donation as "Verified"
+  - Send confirmation message to donor
+  - Request additional information from donor
+  - Cancel/reject the donation record
 
-#### `/src/services`
+#### Static Pages
+- **About Us Page**: Information about the NGO, its mission, team, and history
+- **Privacy Policy Page**: Detailed privacy policy to comply with data protection regulations
+- **Terms & Conditions Page**: Rules, regulations, and terms of service
+- These pages will be editable from the admin panel using a rich text editor
 
-Service layers for API interactions:
+#### Database Schema Updates
+- MongoDB Collections:
+  - `donations`: Document structure for donation records
+    - `_id`: MongoDB ObjectId
+    - `donor_name`: String
+    - `donor_phone`: String
+    - `amount`: Number
+    - `reference_id`: String (optional)
+    - `status`: String ("pending", "verified", "cancelled")
+    - `admin_notes`: String
+    - `created_at`: Date
+    - `verified_at`: Date
+  - `upi_details`: Document structure for UPI payment information
+    - `_id`: MongoDB ObjectId
+    - `app_name`: String (e.g., "Google Pay", "PhonePe")
+    - `upi_id`: String
+    - `display_name`: String
+    - `active`: Boolean
+  - `pages`: Document structure for static page content
+    - `_id`: MongoDB ObjectId
+    - `slug`: String
+    - `title`: String
+    - `content`: String (rich text)
+    - `updated_at`: Date
+  - `services`: Document structure for services
+    - `_id`: MongoDB ObjectId
+    - `title`: String
+    - `description`: String
+    - `slug`: String
+    - `image`: String (URL)
+    - `show_in_menu`: Boolean
 
-- `MediaService.ts` - Service for media-related operations
+## 5. Development and Deployment
 
-#### `/src/utils`
+### 5.1. Development Environment
+- Node.js 18+ and npm/yarn/pnpm
+- MongoDB:
+  - Local MongoDB instance for development
+  - MongoDB Atlas account for staging/production
+- Environment variables for sensitive information
 
-Utility functions and helpers:
+### 5.2. Deployment Options
+- **Vercel**: Preferred platform for Next.js applications
+- **Alternatives**: Netlify, AWS Amplify, or self-hosted on a Node.js server
 
-- `mongodb.ts` - MongoDB connection utilities
-- `api.ts` - API helper functions
-- `MediaUtils.tsx` - Media-specific utilities
+### 5.3. CI/CD
+- GitHub Actions or similar for automated testing and deployment
+- Environment-specific configuration for staging and production
 
----
+## 6. Future Enhancements
 
-## User-Facing Features
+- Progressive Web App (PWA) functionality
+- Email notification system for new donations
+- Integration with social media APIs for automatic post sharing
+- Advanced reporting and analytics dashboard
+- SMS notifications for donation confirmation
+- Multi-language support for international reach
 
-| Page | Details |
-|------|---------|
-| Home | NGO mission, recent success stories, top services |
-| Adoption | Animal profiles: name, image, breed, age, status, contact |
-| Donation | UPI QR, click-to-pay UPI link, predefined amount buttons |
-| Blog & Updates | News, tips, case studies, rescue stories |
-| Contact Us | Form (name, email, message), phone number, Google Maps optional |
-| Thank You Page | Simple thank you message post-donation or form submission |
+## 7. Database Schema Implementation Guide with MongoDB Compass
 
----
+##### 1. Installing and Setting Up MongoDB Compass
 
-## Admin Panel Features
+1. **Download MongoDB Compass**:
+   - Visit [MongoDB Compass download page](https://www.mongodb.com/try/download/compass)
+   - Choose your operating system and download the installer
+   - Follow the installation instructions
 
-### Content Management
-- Blog post editor (title, content, image, tags)
-- Manage success stories with images and text
-- Service category management (add/edit/delete)
+2. **Connect to MongoDB**:
+   - Open MongoDB Compass
+   - Use the connection string format: `mongodb+srv://username:password@cluster0.example.mongodb.net/`
+   - Click "Connect"
 
-### Media Management
-- Upload: single or bulk
-- Assign to service or animal profile
-- If bulk → ask for category
-- If no category exists → popup for new one
-- Option to view all images:
-  - Mark as used in post or unused (catalogue)
-  - Change image's category
-  - Fill full post form for used image (title, description)
+3. **Create the Database**:
+   - Click "Create Database"
+   - Database Name: `animal-welfare-db`
+   - Collection Name: `ngo_settings` (first collection to create)
+   - Click "Create Database"
 
-### Donation Settings
-- Set UPI ID
-- Add/edit predefined amounts
-- Upload or regenerate UPI QR code
-- Preview donation layout
+##### 2. Creating Collections and Document Structures
 
-### NGO Profile Management
-- Logo upload and management
-- Organization details (name, mission statement, contact info)
-- Team member profiles and roles
-- Social media links and handles
+**Collection: `ngo_settings`**
 
-### Analytics & Marketing
-- Facebook Pixel & Google Analytics/Tag Manager code box
-- Dashboard: show donation summary, traffic stats (optional phase)
-
-### Optional AI Features
-- On uploaded image:
-  - Suggest title/content based on image recognition (animals, activities)
-  - Extract keywords or auto-fill post data
-- Toggle switch in Admin: AI Assist ON/OFF
-
----
-
-## Technical Architecture
-
-### Architecture Overview
-
-This application follows a modern Next.js architecture using the App Router pattern. It's designed as a single-page application (SPA) with server-side rendering (SSR) for improved SEO and initial load performance.
-
-### App Router Structure
-
-The application uses Next.js App Router for routing:
-
-- Each folder in `/src/app` represents a route
-- `page.tsx` files define the content for each route
-- `layout.tsx` files define the layout wrapping content
-- `loading.tsx` files define loading states
-- `error.tsx` files define error handling
-
-### Component Architecture
-
-Components follow a hierarchical structure:
-
-1. **Page Components**: Top-level components that correspond to routes
-2. **Feature Components**: Components that implement specific features
-3. **Common Components**: Shared UI components used across features
-
-### State Management
-
-- React Context API for global state
-- Local component state for UI-specific state
-- MongoDB for persistence
-
----
-
-## Media Management System
-
-### Overview
-
-The centralized media management system provides a complete solution for managing all media assets across the NGO website. It replaces the previously fragmented media handling approach with a unified system that allows administrators to efficiently organize, search, and utilize media files.
-
-### Features
-
-- **Unified Media Library**: Central repository for all images, videos, and documents
-- **Advanced Search & Filtering**: Find media by type, tags, categories, and more
-- **Usage Analytics**: Track where media is being used across the website
-- **Tag Management**: Organize media with consistent tagging
-- **Migration Tool**: Easily migrate from the old system to the new one
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
-
-### Components
-
-1. **MediaContext**: Provides state management for the entire media system
-2. **MediaService**: Handles API interactions for CRUD operations
-3. **MediaUtils**: Utility functions for common media operations
-4. **UI Components**:
-   - MediaLibrary: Browse and manage media files
-   - MediaAnalytics: View usage statistics and trends
-   - MediaTagManager: Organize and standardize tags
-   - MediaDashboard: Main interface tying everything together
-
-### Media Upload Flow
-
-1. User selects files through MediaLibrary component
-2. Files are processed (resized if needed) using Sharp
-3. Media metadata is stored in MongoDB
-4. Files are stored in the file system with optimized naming
-
-### Media Context
-
-The MediaContext provides:
-- Media items list and filtering
-- Category management
-- Upload functionality
-- Media item updates
-
-```jsx
-// Example usage of MediaContext
-const { mediaItems, addMediaItem, deleteMediaItem } = useMedia();
-```
-
----
-
-## Donation System
-
-### UPI Payment Flow
-
-1. User selects donation amount
-2. UPI QR code is generated with the amount embedded
-3. User scans QR code with UPI app
-4. Payment confirmation is sent to the server
-5. Thank you page is displayed
-
-### Donation Components
-
-- `DonationForm.tsx` - Main donation form
-- `UpiQRCode.tsx` - Generates and displays UPI QR code
-- `PredefinedAmounts.tsx` - Shows preset donation amounts
-
----
-
-## Database Schema
-
-### Media Collection
-```javascript
+1. Click on the database name (`animal-welfare-db`)
+2. Click "CREATE COLLECTION"
+3. Enter collection name: `ngo_settings`
+4. Click "Create"
+5. Click on the collection to view it
+6. Click "ADD DATA" → "Insert Document"
+7. Add the following JSON structure:
+```json
 {
-  id: String,
-  name: String,
-  url: String,
-  type: String,
-  size: Number,
-  category: String,
-  dateCreated: Date,
-  status: String,
-  metadata: {
-    width: Number,
-    height: Number,
-    // AI-generated fields when enabled
-    suggestedTitle: String,
-    suggestedKeywords: [String]
+  "name": "Animal Welfare NGO",
+  "logo": "/images/logo.png",
+  "address": "123 Main Street, City, Country",
+  "phone": "+1234567890",
+  "email": "contact@example.org",
+  "colors": {
+    "main": "#4CAF50",
+    "base": "#FFFFFF",
+    "secondary": "#2196F3"
+  },
+  "social_media": {
+    "facebook": "https://facebook.com/example",
+    "twitter": "https://twitter.com/example"
   }
 }
 ```
+8. Click "Insert"
 
-### Animal Collection
-```javascript
+**Repeat the process for each of the following collections:**
+
+**Collection: `donations`**
+
+Document structure:
+```json
 {
-  id: String,
-  name: String,
-  type: String,
-  breed: String,
-  age: Number,
-  gender: String,
-  images: [String], // References to media collection
-  description: String,
-  status: String, // available, adopted, etc.
-  medicalHistory: String,
-  dateAdded: Date
+  "donor_name": "John Doe",
+  "donor_phone": "+1234567890",
+  "amount": 1000,
+  "reference_id": "UPI123456",
+  "status": "pending",
+  "admin_notes": "",
+  "created_at": {"$date": "2023-07-15T10:30:00Z"},
+  "verified_at": null
 }
 ```
 
-### Post Collection
-```javascript
+**Collection: `upi_details`**
+
+Document structure:
+```json
 {
-  id: String,
-  title: String,
-  content: String,
-  author: String,
-  images: [String], // References to media collection
-  category: String,
-  tags: [String],
-  publishDate: Date,
-  status: String // draft, published
+  "app_name": "Google Pay",
+  "upi_id": "example@gpay",
+  "display_name": "Animal Welfare - GPay",
+  "qr_code": "/uploads/qr-codes/gpay.png",
+  "active": true,
+  "app_logo": "/images/payment-icons/gpay.png",
+  "app_color": "#4285F4",
+  "display_order": 1
 }
 ```
 
----
+Example documents for different payment apps:
+```json
+{
+  "app_name": "PhonePe",
+  "upi_id": "example@ybl",
+  "display_name": "Animal Welfare - PhonePe",
+  "qr_code": "/uploads/qr-codes/phonepe.png",
+  "active": true,
+  "app_logo": "/images/payment-icons/phonepe.png",
+  "app_color": "#5f259f",
+  "display_order": 2
+}
+```
 
-## API Reference
+```json
+{
+  "app_name": "Paytm",
+  "upi_id": "example@paytm",
+  "display_name": "Animal Welfare - Paytm",
+  "qr_code": "/uploads/qr-codes/paytm.png",
+  "active": true,
+  "app_logo": "/images/payment-icons/paytm.png",
+  "app_color": "#00BAF2",
+  "display_order": 3
+}
+```
 
-### Media API
-- `GET /api/media` - List all media with filtering options
-- `POST /api/media` - Upload new media
-- `PUT /api/media/:id` - Update media metadata
-- `DELETE /api/media/:id` - Delete media item
+**Collection: `pages`**
 
-### Donation API
-- `GET /api/donations` - List donations (admin only)
-- `POST /api/donations` - Record new donation
-- `GET /api/donations/stats` - Get donation statistics
+Document structure:
+```json
+{
+  "slug": "about-us",
+  "title": "About Us",
+  "content": "<h1>About Our NGO</h1><p>We are dedicated to animal welfare...</p>",
+  "updated_at": {"$date": "2023-07-10T14:20:00Z"}
+}
+```
 
----
+**Collection: `services`**
 
-## Development Guide
+Document structure:
+```json
+{
+  "title": "Animal Rescue",
+  "description": "We provide emergency rescue services for injured animals.",
+  "slug": "animal-rescue",
+  "image": "/uploads/services/rescue.jpg",
+  "show_in_menu": true
+}
+```
 
-### Getting Started
+**Collection: `posts`**
 
-This section provides instructions for developers who want to contribute to the Animal Welfare NGO website. It outlines the development workflow, coding standards, and key areas for future development.
+Document structure:
+```json
+{
+  "title": "Recent Rescue Operation",
+  "slug": "recent-rescue-operation",
+  "content": "<p>Our team successfully rescued 5 dogs from...</p>",
+  "featured_image": "/uploads/posts/rescue-operation.jpg",
+  "author": "Admin",
+  "published_at": {"$date": "2023-07-05T09:15:00Z"},
+  "tags": ["rescue", "dogs"],
+  "is_published": true
+}
+```
 
-### Prerequisites
+**Collection: `media`**
 
-- Node.js (v18+)
-- npm or yarn
-- MongoDB
-- Git
+Document structure:
+```json
+{
+  "filename": "dog-rescue.jpg",
+  "original_filename": "IMG_12345.jpg",
+  "path": "/uploads/media/dog-rescue.jpg",
+  "type": "image/jpeg",
+  "size": 1024000,
+  "service_id": {"$oid": "60d21b4667d0d8992e610c85"},
+  "uploaded_at": {"$date": "2023-07-01T11:30:00Z"}
+}
+```
 
-### Initial Setup
+##### 3. Creating Indexes for Better Performance
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd animal-welfare-ngo
-   ```
+For each collection, create appropriate indexes:
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+**Collection: `donations`**
+1. Click on the collection
+2. Click "Indexes" tab
+3. Click "CREATE INDEX"
+4. Field name: `status`, Index type: `1` (ascending)
+5. Click "Create"
+6. Repeat for `created_at` field
 
-3. Set up environment variables:
-   ```bash
-   cp .env.example .env.local
-   ```
+**Collection: `posts`**
+1. Create index on `slug` field (for faster lookups)
+2. Create index on `published_at` field (for sorting)
+
+**Collection: `services`**
+1. Create index on `slug` field
+2. Create index on `show_in_menu` field
+
+##### 4. Basic Queries in MongoDB Compass
+
+**Find all pending donations:**
+1. Navigate to `donations` collection
+2. Click "FILTER" field
+3. Enter: `{ "status": "pending" }`
+4. Click "Find"
+
+**Find recent posts:**
+1. Navigate to `posts` collection
+2. Click "FILTER" field
+3. Enter: `{ "is_published": true }`
+4. Click "SORT" field
+5. Enter: `{ "published_at": -1 }`
+6. Click "Find"
+
+**View services in menu:**
+1. Navigate to `services` collection
+2. Click "FILTER" field
+3. Enter: `{ "show_in_menu": true }`
+4. Click "Find"
+
+##### 5. Data Export and Import
+
+**Exporting Data:**
+1. Click on a collection
+2. Click "Collection" dropdown in the menu bar
+3. Select "Export Collection"
+4. Choose format (JSON, CSV) and file location
+5. Click "Export"
+
+**Importing Data:**
+1. Click on a collection
+2. Click "Collection" dropdown in the menu bar
+3. Select "Import Data"
+4. Choose your file
+5. Click "Import"
+
+##### 6. Updating Documents
+
+**Update NGO Settings:**
+1. Navigate to `ngo_settings` collection
+2. Find the document
+3. Click the edit icon (pencil)
+4. Make changes to the JSON
+5. Click "Update"
+
+**Mark a Donation as Verified:**
+1. Navigate to `donations` collection
+2. Find the document with filter `{ "status": "pending", "donor_name": "John Doe" }`
+3. Click the edit icon
+4. Change `"status": "pending"` to `"status": "verified"`
+5. Set `"verified_at"` to current date using `{"$date": "YYYY-MM-DDTHH:MM:SSZ"}`
+6. Click "Update"
+
+##### 7. UPI Payment Implementation Details
+
+**Admin UI for UPI Configuration:**
+
+1. **Payment Settings Page Structure**:
+   - Top section: Global payment settings (enable/disable all UPI payments, default messages)
+   - App-specific sections: Separate configuration cards for each payment app
    
-   Edit `.env.local` with the following variables:
-   ```
-   MONGODB_URI=mongodb://localhost:27017/ngo
-   NEXTAUTH_SECRET=your-secret-key
-   NEXTAUTH_URL=http://localhost:3000
-   ```
-
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-The application will be available at http://localhost:3000.
-
-### Code Structure and Standards
-
-#### File Naming Conventions
-
-- React components: PascalCase (e.g., `Header.tsx`)
-- Utilities and hooks: camelCase (e.g., `useLocalStorage.ts`)
-- Pages: lowercase with hyphens for multi-word names (e.g., `thank-you.tsx`)
-
-#### Component Structure
-
-Each component should follow this basic structure:
-
-```tsx
-// Imports
-import React from 'react';
-import { SomeType } from 'types';
-
-// Types
-type ComponentProps = {
-  prop1: string;
-  prop2?: number;
-};
-
-// Component
-const Component: React.FC<ComponentProps> = ({ prop1, prop2 = 0 }) => {
-  // State and hooks
-  
-  // Helper functions
-  
-  // Render
-  return (
-    <div>
-      {/* Component JSX */}
-    </div>
-  );
-};
-
-export default Component;
-```
-
-#### Styling Approach
-
-Use Tailwind CSS utility classes for styling. Keep custom CSS to a minimum.
-
-For complex components, group related Tailwind classes:
-
-```tsx
-<div 
-  className={`
-    px-4 py-2 rounded-lg          // Padding and border
-    bg-blue-500 text-white        // Colors
-    hover:bg-blue-600 transition   // Interaction
-  `}
->
-  Content
-</div>
-```
-
-### Working with MongoDB
-
-#### Connection
-
-MongoDB connection is handled in `src/utils/mongodb.ts`. Use the provided client:
-
-```tsx
-import { getMongoDb } from '@/utils/mongodb';
-
-async function getData() {
-  const db = await getMongoDb();
-  const collection = db.collection('yourCollection');
-  return collection.find({}).toArray();
-}
-```
-
-#### Models
-
-Define data models in the `src/models` directory following this pattern:
-
-```tsx
-// src/models/Animal.ts
-import { ObjectId } from 'mongodb';
-
-export type Animal = {
-  _id?: ObjectId;
-  name: string;
-  type: string;
-  breed: string;
-  age: number;
-  // other fields
-};
-
-// Helper functions for this model
-export async function getAnimals() {
-  // Implementation
-}
-```
-
----
-
-## Deployment
-
-The application is configured for deployment on Render, but can be deployed on any Node.js hosting platform.
-
-### Build Process
-
-```bash
-# Build the application
-npm run build
-
-# Start production server
-npm start
-```
-
-### Staging Environment
-
-Before deploying to production, test changes in the staging environment:
-
-```bash
-# Deploy to staging
-npm run build
-npm run deploy:staging
-```
-
-### Production Environment
-
-Once verified in staging, deploy to production:
-
-```bash
-# Deploy to production
-npm run build
-npm run deploy:production
-```
-
----
-
-## Performance & Security
-
-### Performance Considerations
-
-- Images are optimized using Sharp
-- Static assets are cached
-- MongoDB queries are optimized with proper indexes
-- Client-side JS is minimized
-
-### Key Metrics to Monitor
-
-- First Contentful Paint (FCP): < 1.8s
-- Largest Contentful Paint (LCP): < 2.5s
-- Total Bundle Size: < 250KB (compressed)
-- Server Response Time: < 200ms
-
-### Optimization Techniques
-
-- Use Next.js Image component for all images
-- Implement proper code splitting
-- Minimize third-party scripts
-- Use Server Components where possible
-- Implement proper caching strategies
-
-### Security Measures
-
-- API routes are protected with proper authentication
-- Admin panel requires secure login
-- Environment variables are used for sensitive information
-- Input validation on all forms
-- MongoDB connection uses TLS
-
----
-
-## Media Integration Guide
-
-### Step 1: Update Component Imports
-
-Replace old media-related imports with the new context-based approach:
-
-```tsx
-// OLD APPROACH
-import MediaManager from '../components/admin/MediaManager';
-// or
-import { someMediaFunction } from '../utils/oldMediaUtils';
-
-// NEW APPROACH
-import { useMedia } from '../context/MediaContext';
-```
-
-### Step 2: Access Media Context in Components
-
-Use the `useMedia` hook to access all media-related functionality:
-
-```tsx
-import React from 'react';
-import { useMedia } from '../context/MediaContext';
-
-const YourComponent = () => {
-  const { 
-    mediaItems, 
-    getFilteredMedia, 
-    addMediaItem,
-    // other functions as needed
-  } = useMedia();
-  
-  // Your component logic
-  
-  return (
-    // Your component JSX
-  );
-};
-```
-
-### Step 3: Replace Media Selection UI
-
-If your component used the old media selector:
-
-```tsx
-// OLD APPROACH
-<MediaManager 
-  onSelect={handleMediaSelect} 
-  multiSelect={false} 
-/>
-
-// NEW APPROACH
-<MediaLibrary 
-  onSelect={handleMediaSelect}
-  multiSelect={false}
-/>
-```
-
-### Step 4: Update Media Data Model Usage
-
-The new system uses a consistent data model for all media items. Make sure your component handles the MediaItem type correctly:
-
-```tsx
-import { MediaItem } from '../components/admin/MediaManager';
-
-// Example usage
-const handleMediaSelect = (selectedMedia: MediaItem) => {
-  console.log(selectedMedia.title);
-  console.log(selectedMedia.filePath);
-  // etc.
-};
-```
-
-### Step 5: Test Your Integration
-
-After making these changes:
-
-1. Test that media selection works correctly
-2. Verify that uploaded media appears in the centralized library
-3. Check that all media-related functions behave as expected
-
-### Common Integration Patterns
-
-#### Example 1: Blog Post Editor with Media Selection
-
-```tsx
-import React, { useState } from 'react';
-import { useMedia } from '../context/MediaContext';
-import MediaLibrary from '../components/admin/MediaLibrary';
-import { MediaItem } from '../components/admin/MediaManager';
-
-const BlogPostEditor = () => {
-  const [showMediaLibrary, setShowMediaLibrary] = useState(false);
-  const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
-  
-  const handleMediaSelect = (media: MediaItem) => {
-    setSelectedMedia(media);
-    setShowMediaLibrary(false);
-  };
-  
-  return (
-    <div>
-      {/* Blog post form fields */}
-      
-      <div>
-        <button onClick={() => setShowMediaLibrary(true)}>
-          Select Featured Image
-        </button>
-        
-        {selectedMedia && (
-          <div>
-            <img 
-              src={selectedMedia.filePath} 
-              alt={selectedMedia.altText || selectedMedia.title} 
-              width={200}
-            />
-            <p>{selectedMedia.title}</p>
-          </div>
-        )}
-      </div>
-      
-      {showMediaLibrary && (
-        <div className="modal">
-          <MediaLibrary 
-            onSelect={handleMediaSelect}
-            allowedTypes={['image/jpeg', 'image/png']}
-          />
-          <button onClick={() => setShowMediaLibrary(false)}>
-            Cancel
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
-```
-
-#### Example 2: Displaying Media Analytics
-
-```tsx
-import React from 'react';
-import { useMedia } from '../context/MediaContext';
-
-const MediaUsageReport = () => {
-  const { mediaItems } = useMedia();
-  
-  // Calculate statistics
-  const totalItems = mediaItems.length;
-  const imageCount = mediaItems.filter(item => item.fileType === 'image').length;
-  const videoCount = mediaItems.filter(item => item.fileType === 'video').length;
-  const documentCount = mediaItems.filter(item => item.fileType === 'document').length;
-  
-  return (
-    <div>
-      <h2>Media Usage Report</h2>
-      <ul>
-        <li>Total Media Items: {totalItems}</li>
-        <li>Images: {imageCount}</li>
-        <li>Videos: {videoCount}</li>
-        <li>Documents: {documentCount}</li>
-      </ul>
-    </div>
-  );
-};
-```
-
----
-
-## Future Roadmap
-
-### Key Areas for Development
-
-#### 1. Media Management Enhancements
-
-The media management system can be improved with:
-
-- Better caching for media previews
-- Integration with cloud storage (AWS S3, etc.)
-- Background processing for large uploads
-- Image optimization using WebP/AVIF formats
-
-#### 2. Donation System
-
-The donation flow needs these enhancements:
-
-- Payment verification callbacks
-- Donation receipt generation and emails
-- Recurring donation options
-- Campaign-specific donation pages
-
-#### 3. Admin Dashboard
-
-The admin dashboard needs these features:
-
-- Better analytics visualizations
-- Export functionality for reports
-- User permission levels
-- Activity logs
-
-#### 4. AI Features Implementation
-
-To implement the optional AI features:
-
-1. Set up connection to a computer vision API (Google Vision, Azure, etc.)
-2. Create middleware for processing uploaded images
-3. Implement the toggle in admin settings
-4. Add UI components to display and edit AI-generated content
-
-### Development Phases
-
-#### Phase 1: Core Features (Current)
-- [x] Basic admin panel
-- [x] Media management
-- [x] Simple donation flow
-- [ ] Blog/content management
-
-#### Phase 2: Enhanced Features
-- [ ] Advanced analytics
-- [ ] Email notifications
-- [ ] Social media integration
-- [ ] Volunteer management
-
-#### Phase 3: Advanced Features
-- [ ] AI-powered content generation
-- [ ] Mobile app integration
-- [ ] Multi-language support
-- [ ] Donor portal
-
----
-
-## Design Principles
-
-- Max width: 500px across all screens
-- Fully responsive below 500px
-- Clean layout, large buttons, mobile-first form fields
-- Prioritize image galleries for animals and success stories
-
-### Responsive Design Implementation
-
-The application implements a mobile-first approach with a maximum width of 500px. For screens wider than 500px, a maintenance page is shown as per requirements.
-
-This is implemented using:
-
-```jsx
-// ClientScreenCheck.tsx - Client-side component for screen size detection
-'use client';
-
-import { useEffect, useState } from 'react';
-import MaintenancePage from './MaintenancePage';
-
-export default function ClientScreenCheck({ children }) {
-  const [windowWidth, setWindowWidth] = useState(0);
-  const [isMounted, setIsMounted] = useState(false);
-  
-  useEffect(() => {
-    setIsMounted(true);
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  
-  if (!isMounted) return null;
-  if (windowWidth > 500) return <MaintenancePage />;
-  
-  return <>{children}</>;
-}
-```
-
----
-
-## Common Issues and Solutions
-
-### MongoDB Connection Issues
-
-If you encounter MongoDB connection errors:
-
-1. Ensure your MongoDB server is running
-2. Check that your connection string in `.env.local` is correct
-3. Verify network access to MongoDB (especially if using Atlas)
-
-### Image Optimization Issues
-
-If image optimization fails:
-
-1. Ensure Sharp is installed correctly
-2. Check for proper write permissions to temp directories
-3. Try limiting concurrent processing for large batches
-
-## Contribution Guidelines
-
-1. Create a feature branch for your changes
-2. Follow the coding standards
-3. Write tests for new features
-4. Update documentation as needed
-5. Create a pull request with a clear description
-
----
-
-*Last updated: May 14, 2025*
+2. **Per-App Configuration Interface**:
+   - Each payment app has its own form section:
+     - App name (fixed: "Google Pay", "PhonePe", "Paytm")
+     - UPI ID field specific to that app
+     - Display name field
+     - QR Code upload
+     - Toggle to enable/disable just this specific app
+     - Display order number (to control the order of appearance)
+     - Color picker for app-specific styling (optional)
+
+3. **Donation Page Implementation**:
+   - Step 1: User enters donation amount and personal details
+   - Step 2: User sees payment method selection with separate cards for each UPI option
+   - Each card displays:
+     - App logo and name
+     - Custom styling based on the app's brand color
+   - Step 3: After selecting a specific payment app, user sees:
+     - Only the QR code for the selected app
+     - UPI ID for manual entry
+     - "Pay Now" button that opens the selected app
+     - Option to go back and choose a different payment method
+
+4. **Deep Link Implementation for Each App**:
+   - **Google Pay**: `upi://pay?pa=[UPI_ID]&pn=[NAME]&am=[AMOUNT]&cu=INR&tn=[REFERENCE]`
+   - **PhonePe**: `phonepe://pay?pa=[UPI_ID]&pn=[NAME]&am=[AMOUNT]&cu=INR&tn=[REFERENCE]`
+   - **Paytm**: `paytmmp://pay?pa=[UPI_ID]&pn=[NAME]&am=[AMOUNT]&cu=INR&tn=[REFERENCE]`
+   
+   **Dynamic QR Code Generation**:
+   - Generate QR codes dynamically that embed:
+     - UPI ID from database
+     - Exact donation amount entered by user
+     - NGO name as payee name
+     - Reference ID for transaction tracking
+   - Use a library like `qrcode` to generate QR codes on-the-fly
+   - QR codes will update automatically when amount changes
+   - Each payment app gets a separate generated QR code with its specific UPI ID
+   
+   **QR Code Download Options**:
+   - Include "Download QR Code" button next to each payment option
+   - Allow users to download QR as PNG image with app name and amount in filename
+   - Include "Share QR Code" functionality for mobile devices
+   - Provide an option to "Print QR Code" for physical reference
+   - When generating downloadable QR codes, include:
+     - NGO logo as an overlay or watermark
+     - Amount and payment reference details printed below the QR
+     - Simple instructions for how to use the QR code
+
+5. **Fallback Mechanisms**:
+   - If deep linking fails, display clear instructions for manual payment
+   - Prominently show QR code that can be scanned with any UPI app
+   - Display reference ID that user should include in their payment

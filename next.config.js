@@ -2,15 +2,19 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost']
+    domains: ['localhost'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
-  eslint: {
-    ignoreDuringBuilds: true
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
-  typescript: {
-    ignoreBuildErrors: true
-  },
-  staticPageGenerationTimeout: 120
 }
 
 module.exports = nextConfig
