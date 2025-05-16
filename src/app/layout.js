@@ -1,4 +1,4 @@
-import './globals.css';
+import './global.css'; // Using the properly set up CSS file
 import { Inter } from 'next/font/google';
 import Navigation from '@/components/common/Navigation';
 import Footer from '@/components/common/Footer';

@@ -1,0 +1,55 @@
+{
+  "pages": {
+    "/_not-found/page": [
+      "static/chunks/webpack-895924fcf342a0fc.js",
+      "static/chunks/fd9d1056-2ea7f2cd545cab9f.js",
+      "static/chunks/117-7b54a68c2119a483.js",
+      "static/chunks/main-app-4244b1c2f59318e9.js",
+      "static/chunks/app/_not-found/page-f2c83a3671b9e634.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack-895924fcf342a0fc.js",
+      "static/chunks/fd9d1056-2ea7f2cd545cab9f.js",
+      "static/chunks/117-7b54a68c2119a483.js",
+      "static/chunks/main-app-4244b1c2f59318e9.js",
+      "static/css/94919261b848b3c9.css",
+      "static/chunks/9081a741-aca4b04a5c1951fd.js",
+      "static/chunks/878-f8821b267c4c8603.js",
+      "static/chunks/972-a6ce98e9e3412326.js",
+      "static/chunks/app/layout-03fdebfc8d8637b8.js"
+    ],
+    "/test-tailwind/page": [
+      "static/chunks/webpack-895924fcf342a0fc.js",
+      "static/chunks/fd9d1056-2ea7f2cd545cab9f.js",
+      "static/chunks/117-7b54a68c2119a483.js",
+      "static/chunks/main-app-4244b1c2f59318e9.js",
+      "static/chunks/app/test-tailwind/page-e19052a0aeb84994.js"
+    ],
+    "/test-tailwind2/page": [
+      "static/chunks/webpack-895924fcf342a0fc.js",
+      "static/chunks/fd9d1056-2ea7f2cd545cab9f.js",
+      "static/chunks/117-7b54a68c2119a483.js",
+      "static/chunks/main-app-4244b1c2f59318e9.js",
+      "static/chunks/app/test-tailwind2/page-02899192b026189c.js"
+    ],
+    "/page": [
+      "static/chunks/webpack-895924fcf342a0fc.js",
+      "static/chunks/fd9d1056-2ea7f2cd545cab9f.js",
+      "static/chunks/117-7b54a68c2119a483.js",
+      "static/chunks/main-app-4244b1c2f59318e9.js",
+      "static/chunks/878-f8821b267c4c8603.js",
+      "static/chunks/972-a6ce98e9e3412326.js",
+      "static/chunks/app/page-88f6c23ba6a95f27.js"
+    ],
+    "/donate/page": [
+      "static/chunks/webpack-895924fcf342a0fc.js",
+      "static/chunks/fd9d1056-2ea7f2cd545cab9f.js",
+      "static/chunks/117-7b54a68c2119a483.js",
+      "static/chunks/main-app-4244b1c2f59318e9.js",
+      "static/chunks/9081a741-aca4b04a5c1951fd.js",
+      "static/chunks/878-f8821b267c4c8603.js",
+      "static/chunks/88-eb5c90f22d985f39.js",
+      "static/chunks/app/donate/page-19b6b6c183c254b7.js"
+    ]
+  }
+}

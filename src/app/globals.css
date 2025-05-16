@@ -13,10 +13,31 @@
 body {
   color: #333;
   background-color: #f9f9f9;
+}@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #4CAF50;
+  --color-primary-light: #81C784;
+  --color-primary-dark: #388E3C;
+  --color-secondary: #2196F3;
+  --font-family: var(--font-family, sans-serif);
+}
+
+body {
+  color: rgb(33, 33, 33);
+  background-color: #f9f9f9;
 }
 
 h1, h2, h3, h4, h5, h6 {
   color: #333;
+}
+
+/* Button styles */
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition-colors;
+  }
 }
 
 /* Custom button styles */

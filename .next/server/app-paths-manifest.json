@@ -1,0 +1,11 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/services/route": "app/api/services/route.js",
+  "/test-tailwind/page": "app/test-tailwind/page.js",
+  "/api/qrcode/route": "app/api/qrcode/route.js",
+  "/api/settings/route": "app/api/settings/route.js",
+  "/test-tailwind2/page": "app/test-tailwind2/page.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/page": "app/page.js",
+  "/donate/page": "app/donate/page.js"
+}
